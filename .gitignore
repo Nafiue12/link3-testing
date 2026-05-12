@@ -1,0 +1,12 @@
+target/
+
+*.png
+*.pdf
+*.html
+
+msedgedriver.exe
+
+.idea/
+.vscode/
+
+*.log
