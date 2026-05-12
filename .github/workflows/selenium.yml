@@ -37,7 +37,7 @@ jobs:
 
       # Run Selenium tests
       - name: Run Selenium Tests
-        run: mvn clean test -DsuiteXmlFile=testng.xml
+        run: "mvn clean test -DsuiteXmlFile=testng.xml"
 
       # Generate Allure report
       - name: Generate Allure Report
