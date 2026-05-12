@@ -1,11 +1,7 @@
 package com.link3.tests;
 
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
-import com.aventstack.extentreports.ExtentReports;
-import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.*;
+import com.link3.allure.AllureUtil;
 import com.link3.base.BaseTest;
 import com.link3.data.CSVReader;
 import com.link3.pages.HomePage;
@@ -13,6 +9,10 @@ import com.link3.pages.LoginPage;
 import com.link3.reports.ExtentManager;
 import com.link3.retry.RetryAnalyzer;
 import com.link3.utils.ScreenshotUtil;
+
+import org.testng.Assert;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 public class HomeTest extends BaseTest {
 
@@ -80,7 +80,7 @@ public class HomeTest extends BaseTest {
             // Wait for new tab
             Thread.sleep(5000);
 
-            // Switch to new tab
+            // Switch tab
             for(String tab :
                     getDriver().getWindowHandles()) {
 
@@ -89,12 +89,11 @@ public class HomeTest extends BaseTest {
                         .window(tab);
             }
 
-            // Current URL
+            // Validate URL
             String currentUrl =
                     getDriver()
                             .getCurrentUrl();
 
-            // Validate login page
             Assert.assertTrue(
 
                     currentUrl.contains(
@@ -121,13 +120,23 @@ public class HomeTest extends BaseTest {
                     "Password Entered"
             );
 
-            // Screenshot before login
+            // Screenshot BEFORE login
+            String beforeLogin =
+
+                    username
+                    + "-before-login.png";
+
             ScreenshotUtil.takeScreenshot(
 
                     getDriver(),
 
-                    username
-                            + "-before-login.png"
+                    beforeLogin
+            );
+
+            // Attach to Allure
+            AllureUtil.attachScreenshot(
+
+                    beforeLogin
             );
 
             test.pass(
@@ -144,13 +153,23 @@ public class HomeTest extends BaseTest {
             // Wait after login
             Thread.sleep(5000);
 
-            // Screenshot after login
+            // Screenshot AFTER login
+            String afterLogin =
+
+                    username
+                    + "-after-login.png";
+
             ScreenshotUtil.takeScreenshot(
 
                     getDriver(),
 
-                    username
-                            + "-after-login.png"
+                    afterLogin
+            );
+
+            // Attach to Allure
+            AllureUtil.attachScreenshot(
+
+                    afterLogin
             );
 
             test.pass(
@@ -164,7 +183,7 @@ public class HomeTest extends BaseTest {
                             .getPageSource()
                             .toLowerCase();
 
-            // Detect login failure
+            // Detect login result
             if(pageSource.contains("invalid")
                     ||
                pageSource.contains("wrong")
@@ -196,12 +215,30 @@ public class HomeTest extends BaseTest {
             );
 
             // Error screenshot
+            String errorShot =
+
+                    "error-"
+                    + username
+                    + ".png";
+
             ScreenshotUtil.takeScreenshot(
 
                     getDriver(),
 
-                    "error-" + username + ".png"
+                    errorShot
             );
+
+            // Attach error screenshot
+            try {
+
+                AllureUtil.attachScreenshot(
+                        errorShot
+                );
+
+            } catch (Exception ex) {
+
+                ex.printStackTrace();
+            }
 
             e.printStackTrace();
 

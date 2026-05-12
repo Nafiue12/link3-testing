@@ -11,34 +11,55 @@ jobs:
 
     runs-on: windows-latest
 
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
     steps:
 
+      # Checkout repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # Setup Java
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
 
+      # Verify Java
       - name: Verify Java
         run: java -version
 
+      # Verify Maven
       - name: Verify Maven
         run: mvn -version
 
+      # Run Selenium tests
       - name: Run Selenium Tests
-        run: mvn clean test
+        run: mvn clean test -DsuiteXmlFile=testng.xml
 
-      - name: Upload Extent Report
+      # Generate Allure report
+      - name: Generate Allure Report
+        run: mvn allure:report
+
+      # Upload Allure Report
+      - name: Upload Allure Report
         uses: actions/upload-artifact@v4
         with:
-          name: ExtentReport
-          path: ExtentReport.html
+          name: AllureReport
+          path: target/site/allure-maven-plugin
 
+      # Upload screenshots
       - name: Upload Screenshots
         uses: actions/upload-artifact@v4
         with:
           name: Screenshots
           path: "*.png"
+
+      # Upload Extent Report
+      - name: Upload Extent Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ExtentReport
+          path: ExtentReport.html
