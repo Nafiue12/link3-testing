@@ -1,0 +1,44 @@
+name: Selenium Automation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  selenium-test:
+
+    runs-on: windows-latest
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Verify Java
+        run: java -version
+
+      - name: Verify Maven
+        run: mvn -version
+
+      - name: Run Selenium Tests
+        run: mvn clean test
+
+      - name: Upload Extent Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ExtentReport
+          path: ExtentReport.html
+
+      - name: Upload Screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: Screenshots
+          path: "*.png"

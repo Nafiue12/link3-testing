@@ -2,10 +2,10 @@ package com.link3.base;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 
 public class BaseTest {
 
-    // Thread-safe driver
     static ThreadLocal<WebDriver> driver =
 
             new ThreadLocal<>();
@@ -13,15 +13,39 @@ public class BaseTest {
     // Setup browser
     public void setup() {
 
-        System.setProperty(
-                "webdriver.edge.driver",
-                "msedgedriver.exe"
-        );
+        EdgeOptions options =
+                new EdgeOptions();
+
+        // Check GitHub environment
+        String github =
+                System.getenv("GITHUB_ACTIONS");
+
+        // Headless only in GitHub
+        if(github != null) {
+
+            options.addArguments(
+                    "--headless"
+            );
+
+            options.addArguments(
+                    "--disable-gpu"
+            );
+
+            options.addArguments(
+                    "--no-sandbox"
+            );
+
+            options.addArguments(
+                    "--window-size=1920,1080"
+            );
+        }
 
         driver.set(
-                new EdgeDriver()
+
+                new EdgeDriver(options)
         );
 
+        // Maximize locally
         getDriver()
                 .manage()
                 .window()
