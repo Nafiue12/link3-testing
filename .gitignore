@@ -1,12 +1,6 @@
 target/
-
 *.png
 *.pdf
-*.html
-
-msedgedriver.exe
-
+ExtentReport.html
 .idea/
 .vscode/
-
-*.log
